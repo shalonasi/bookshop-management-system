@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Product - Bookshop Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Bookshop Management System</h1>
+    </div>
+
+    <div class="container">
+
+        <h2>Add Product</h2>
+
+        <form method="POST">
+
+            <div class="form-group">
+                <label for="name">Product Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="category_id">Category</label>
+<select id="category_id" name="category_id" required>
+    <option value="">Select Category</option>
+
+    {% for category in categories %}
+        <option value="{{ category.id }}">
+            {{ category.name }}
+        </option>
+    {% endfor %}
+
+</select>
+            </div>
+
+            <div class="form-group">
+                <label for="barcode">Barcode / ISBN</label>
+                <input type="text" id="barcode" name="barcode">
+            </div>
+
+            <div class="form-group">
+                <label for="buying_price">Buying Price (GH₵)</label>
+                <input type="number" id="buying_price" name="buying_price"
+                       step="0.01" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="selling_price">Selling Price (GH₵)</label>
+                <input type="number" id="selling_price" name="selling_price"
+                       step="0.01" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Initial Quantity</label>
+                <input type="number" id="quantity" name="quantity"
+                       min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="minimum_stock">Minimum Stock Level</label>
+                <input type="number" id="minimum_stock" name="minimum_stock"
+                       min="0" value="5" required>
+            </div>
+
+            <button type="submit">Save Product</button>
+
+        </form>
+
+        <a href="/products" class="back">← Back to Products</a>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Flask / local instance data
+instance/
+
+# Environment variables
+.env
+.env.*
+
+# Build files
+build/
+dist/
+
+# PyInstaller
+*.spec
+
+# IDE
+.vscode/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3

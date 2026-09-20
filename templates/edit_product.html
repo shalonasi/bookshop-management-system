@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Product - Bookshop Management System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <div class="app-layout">
+
+        {% include "partials/sidebar.html" %}
+
+        <main class="main-content">
+
+            <div class="top-header">
+                <h1>Edit Product</h1>
+
+                <div class="admin-info">
+                    <span>Administrator</span>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+
+                <div class="welcome">
+                    <h2>Edit Product</h2>
+                    <p>Update the product information below.</p>
+                </div>
+
+                <form method="POST">
+
+                    <div class="form-group">
+                        <label for="name">Product Name</label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value="{{ product.name }}"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category_id">Category</label>
+
+                        <select
+                            id="category_id"
+                            name="category_id"
+                            required
+                        >
+
+                            {% for category in categories %}
+
+                                <option
+                                    value="{{ category.id }}"
+                                    {% if product.category_id == category.id %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    {{ category.name }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="barcode">Barcode / ISBN</label>
+
+                        <input
+                            type="text"
+                            id="barcode"
+                            name="barcode"
+                            value="{{ product.barcode or '' }}"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buying_price">Buying Price (GH₵)</label>
+
+                        <input
+                            type="number"
+                            id="buying_price"
+                            name="buying_price"
+                            value="{{ product.buying_price }}"
+                            step="0.01"
+                            min="0"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="selling_price">Selling Price (GH₵)</label>
+
+                        <input
+                            type="number"
+                            id="selling_price"
+                            name="selling_price"
+                            value="{{ product.selling_price }}"
+                            step="0.01"
+                            min="0"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+
+                        <input
+                            type="number"
+                            id="quantity"
+                            name="quantity"
+                            value="{{ product.quantity }}"
+                            min="0"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="minimum_stock">Minimum Stock Level</label>
+
+                        <input
+                            type="number"
+                            id="minimum_stock"
+                            name="minimum_stock"
+                            value="{{ product.minimum_stock }}"
+                            min="0"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn">
+                        Update Product
+                    </button>
+
+                    <a href="/products" class="btn">
+                        Cancel
+                    </a>
+
+                </form>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

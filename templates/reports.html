@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Reports - HORA Bookshop</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    {% include "partials/sidebar.html" %}
+
+    <main class="main-content">
+
+        <!-- TOP HEADER -->
+
+        <div class="top-header">
+
+            <h1>Reports</h1>
+
+            <div class="admin-info">
+                <span>{{ current_user.username }}</span>
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-content">
+
+            <!-- WELCOME -->
+
+            <div class="welcome">
+
+                <h2>Bookshop Reports</h2>
+
+                <p>
+                    View an overview of sales, products and stock.
+                </p>
+
+            </div>
+
+
+ <!-- REPORT FILTERS -->
+
+<div class="report-filters">
+
+    <a href="{{ url_for('reports') }}"
+       class="btn">
+        All Time
+    </a>
+
+    <a href="{{ url_for('reports', period='today') }}"
+       class="btn">
+        Today
+    </a>
+
+    <a href="{{ url_for('reports', period='month') }}"
+       class="btn">
+        This Month
+    </a>
+
+    <form method="GET"
+          action="{{ url_for('reports') }}"
+          class="date-filter">
+
+          {% if selected_date %}
+
+    <a
+        href="{{ url_for('daily_report_pdf', date=selected_date) }}"
+        target="_blank"
+        class="btn"
+    >
+        🖨️ Print Daily Report
+    </a>
+
+{% endif %}
+
+        <label for="date">
+            View Sales for:
+        </label>
+
+        <input
+            type="date"
+            id="date"
+            name="date"
+            value="{{ selected_date }}"
+            required
+        >
+
+        <button type="submit" class="btn">
+            View Report
+        </button>
+
+    </form>
+
+
+<a href="{{ url_for('clear_test_data') }}" class="danger-button">
+    Clear Test Data
+</a>
+</div>
+
+
+
+
+    
+<div style="margin-bottom: 25px;">
+
+    <form method="GET"
+          action="{{ url_for('reports') }}"
+          style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+
+        <label for="date">
+            <strong>View Sales for:</strong>
+        </label>
+
+        <input
+            type="date"
+            id="date"
+            name="date"
+            value="{{ selected_date }}"
+            required
+        >
+
+        <button type="submit" class="btn">
+            View Report
+        </button>
+
+        {% if selected_date %}
+            <a href="{{ url_for('daily_report_pdf', date=selected_date) }}"
+               class="btn">
+                Download PDF
+            </a>
+        {% endif %}
+
+    </form>
+
+</div>
+
+            <!-- SUMMARY CARDS -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <h3>Total Sales</h3>
+                    <p>
+                        GH₵ {{ "%.2f"|format(total_sales) }}
+                    </p>
+                </div>
+
+
+                <div class="stat-card">
+                    <h3>Total Profit</h3>
+                    <p>
+                        GH₵ {{ "%.2f"|format(total_profit) }}
+                    </p>
+                </div>
+
+
+                <div class="stat-card">
+                    <h3>Number of Sales</h3>
+                    <p>
+                        {{ sales_count }}
+                    </p>
+                </div>
+
+
+                <div class="stat-card">
+                    <h3>Total Products</h3>
+                    <p>
+                        {{ product_count }}
+                    </p>
+                </div>
+
+
+                <div class="stat-card">
+                    <h3>Total Stock</h3>
+                    <p>
+                        {{ total_stock }}
+                    </p>
+                </div>
+
+
+                <div class="stat-card">
+                    <h3>Low Stock Items</h3>
+                    <p>
+                        {{ low_stock_count }}
+                    </p>
+                </div>
+
+
+                <div class="stat-card">
+                    <h3>Inventory Cost Value</h3>
+                    <p>
+                        GH₵ {{ "%.2f"|format(inventory_cost_value) }}
+                    </p>
+                </div>
+
+
+                <div class="stat-card">
+                    <h3>Potential Sales Value</h3>
+                    <p>
+                        GH₵ {{ "%.2f"|format(potential_sales_value) }}
+                    </p>
+                </div>
+
+
+                <div class="stat-card">
+                    <h3>Potential Stock Profit</h3>
+                    <p>
+                        GH₵ {{ "%.2f"|format(potential_profit) }}
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- LOW STOCK -->
+
+            <div class="table-container">
+
+                <h2>Low Stock Products</h2>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Product</th>
+                            <th>Current Stock</th>
+                            <th>Minimum Stock</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% if low_stock_products %}
+
+                            {% for product in low_stock_products %}
+
+                            <tr>
+
+                                <td>
+                                    {{ product.name }}
+                                </td>
+
+                                <td>
+                                    {{ product.quantity }}
+                                </td>
+
+                                <td>
+                                    {{ product.minimum_stock }}
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <tr>
+
+                                <td colspan="3">
+                                    No low stock products.
+                                </td>
+
+                            </tr>
+
+                        {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- TOP-SELLING BOOKS -->
+
+            <div class="table-container">
+
+                <h2>Top-Selling Books</h2>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Rank</th>
+                            <th>Book</th>
+                            <th>Quantity Sold</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% if top_selling_books %}
+
+                            {% for book in top_selling_books %}
+
+                            <tr>
+
+                                <td>
+                                    {{ loop.index }}
+                                </td>
+
+                                <td>
+                                    {{ book.name }}
+                                </td>
+
+                                <td>
+                                    {{ book.quantity_sold }}
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <tr>
+
+                                <td colspan="3">
+                                    No sales recorded yet.
+                                </td>
+
+                            </tr>
+
+                        {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- RECENT SALES -->
+
+            <div class="table-container">
+
+                <h2>Recent Sales</h2>
+
+                <div style="overflow-x: auto; width: 100%;">
+
+                    <table style="width: 100%; min-width: 650px;">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Receipt</th>
+                                <th>Total</th>
+                                <th>Date</th>
+                                <th>Sold By</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% if recent_sales %}
+
+                                {% for sale in recent_sales %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ sale.receipt_number }}
+                                    </td>
+
+                                    <td>
+                                        GH₵ {{ "%.2f"|format(sale.total_amount) }}
+                                    </td>
+
+                                    <td style="white-space: nowrap;">
+
+                                        {{ sale.sale_date.strftime("%d-%m-%Y %H:%M") }}
+
+                                    </td>
+
+                                    <td>
+                                        {{ sale.user.username }}
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            {% else %}
+
+                                <tr>
+
+                                    <td colspan="4">
+                                        No sales recorded yet.
+                                    </td>
+
+                                </tr>
+
+                            {% endif %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Category - Bookshop Management System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Bookshop Management System</h1>
+    </div>
+
+    <div class="container">
+
+        <div class="welcome">
+            <h2>Add Category</h2>
+            <p>Create a new product category.</p>
+        </div>
+
+        <form method="POST">
+
+            <div class="form-group">
+                <label for="name">Category Name</label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="e.g. Textbooks"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn">
+                Save Category
+            </button>
+
+        </form>
+
+        <br>
+
+        <a href="/categories">← Back to Categories</a>
+
+    </div>
+
+</body>
+</html>

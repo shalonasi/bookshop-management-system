@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Category - Bookshop Management System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="app-layout">
+
+        {% include "partials/sidebar.html" %}
+
+        <main class="main-content">
+
+            <div class="top-header">
+
+                <h1>Edit Category</h1>
+
+                <div class="admin-info">
+                    <span>Administrator</span>
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-content">
+
+                <div class="welcome">
+
+                    <h2>Edit Category</h2>
+
+                    <p>
+                        Update the category name below.
+                    </p>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <form method="POST">
+
+                        <div style="margin-bottom: 15px;">
+
+                            <label for="name">
+                                Category Name
+                            </label>
+
+                            <br>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value="{{ category.name }}"
+                                required
+                                style="padding: 10px; width: 300px;"
+                            >
+
+                        </div>
+
+
+                        <button type="submit"
+                                class="btn">
+
+                            Save Changes
+
+                        </button>
+
+
+                        <a href="{{ url_for('categories') }}"
+                           class="btn">
+
+                            Cancel
+
+                        </a>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
+

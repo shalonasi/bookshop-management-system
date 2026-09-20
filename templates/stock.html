@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Stock Management - Bookshop Management System
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="app-layout">
+
+    {% include "partials/sidebar.html" %}
+
+
+    <main class="main-content">
+
+
+        <!-- TOP HEADER -->
+
+        <div class="top-header">
+
+            <div>
+
+                <h1>Stock Management</h1>
+
+                <p class="page-subtitle">
+                    Monitor and manage inventory levels
+                </p>
+
+            </div>
+
+
+            <div class="admin-info">
+
+                <span>
+                    {{ current_user.username }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="dashboard-content">
+
+
+            <!-- PAGE INTRO -->
+
+            <div class="welcome">
+
+                <h2>Current Inventory</h2>
+
+                <p>
+                    Monitor product quantities and stock levels.
+                </p>
+
+            </div>
+
+
+
+            <!-- STOCK SUMMARY -->
+
+            <div class="stock-summary">
+
+
+                <div class="stock-summary-card">
+
+                    <span>
+                        Total Products
+                    </span>
+
+                    <strong>
+                        {{ products|length }}
+                    </strong>
+
+                </div>
+
+
+                <div class="stock-summary-card">
+
+                    <span>
+                        Low Stock
+                    </span>
+
+                    <strong class="summary-warning">
+
+{% set low_stock_count = 0 %}
+
+{% for product in products %}
+    {% if product.quantity <= product.minimum_stock %}
+        {% set low_stock_count = low_stock_count + 1 %}
+    {% endif %}
+{% endfor %}
+
+{{ low_stock_count }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="stock-summary-card">
+
+                    <span>
+                        Total Units
+                    </span>
+
+                    <strong>
+
+                        {{ products
+                           |map(attribute='quantity')
+                           |sum }}
+
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- STOCK TABLE -->
+
+            <div class="table-container">
+
+
+                <div class="section-title">
+
+                    <div>
+
+                        <h3>
+                            Inventory
+                        </h3>
+
+                        <p>
+                            Current stock levels for all products
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sale-table-wrapper">
+
+                    <table class="stock-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    ID
+                                </th>
+
+                                <th>
+                                    Product
+                                </th>
+
+                                <th>
+                                    Category
+                                </th>
+
+                                <th>
+                                    Current Stock
+                                </th>
+
+                                <th>
+                                    Minimum Stock
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% if products %}
+
+                                {% for product in products %}
+
+                                <tr>
+
+
+                                    <td>
+                                        #{{ product.id }}
+                                    </td>
+
+
+                                    <td>
+
+                                        <strong>
+                                            {{ product.name }}
+                                        </strong>
+
+                                    </td>
+
+
+                                    <td>
+                                        {{ product.category.name }}
+                                    </td>
+
+
+                                    <td>
+
+                                        <strong>
+                                            {{ product.quantity }}
+                                        </strong>
+
+                                    </td>
+
+
+                                    <td>
+                                        {{ product.minimum_stock }}
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if product.quantity == 0 %}
+
+                                            <span class="stock-out">
+                                                Out of Stock
+                                            </span>
+
+                                        {% elif product.quantity <= product.minimum_stock %}
+
+                                            <span class="stock-low">
+                                                Low Stock
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="stock-good">
+                                                In Stock
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <a
+                                            href="{{ url_for('stock_movement', product_id=product.id) }}"
+                                            class="action-btn"
+                                        >
+                                            Manage Stock
+                                        </a>
+
+                                    </td>
+
+
+                                </tr>
+
+                                {% endfor %}
+
+                            {% else %}
+
+                                <tr>
+
+                                    <td colspan="7">
+
+                                        No products available.
+
+                                    </td>
+
+                                </tr>
+
+                            {% endif %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>
+

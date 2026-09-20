@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - Bookshop Management System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <div class="app-layout">
+
+        {% include "partials/sidebar.html" %}
+
+        <main class="main-content">
+
+            <div class="top-header">
+                <h1>Admin Dashboard</h1>
+
+                <div class="admin-info">
+                    <span>Administrator</span>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+            <div class="alert {{ category }}">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+                <div class="welcome">
+                    <h2>Welcome, Admin</h2>
+                    <p>Manage your bookshop from the dashboard.</p>
+                </div>
+
+
+<!-- =========================
+     DASHBOARD SUMMARY
+========================== -->
+
+<div class="dashboard-summary">
+
+    <!-- Total Products -->
+    <div class="stat-card">
+
+        <div class="stat-icon products-icon">
+            📚
+        </div>
+
+        <div class="stat-info">
+            <span>Total Products</span>
+            <strong>{{ total_products }}</strong>
+        </div>
+
+    </div>
+
+
+    <!-- Stock Available -->
+    <div class="stat-card">
+
+        <div class="stat-icon stock-icon">
+            📦
+        </div>
+
+        <div class="stat-info">
+            <span>Stock Available</span>
+            <strong>{{ total_stock }}</strong>
+        </div>
+
+    </div>
+
+
+    <!-- Low Stock -->
+    <div class="stat-card">
+
+        <div class="stat-icon warning-icon">
+            ⚠
+        </div>
+
+        <div class="stat-info">
+            <span>Low Stock</span>
+            <strong>{{ low_stock_count }}</strong>
+        </div>
+
+    </div>
+
+
+    <!-- Today's Revenue -->
+    <div class="stat-card">
+
+        <div class="stat-icon sales-icon">
+            💰
+        </div>
+
+        <div class="stat-info">
+            <span>Today's Revenue</span>
+
+            <strong>
+                GH₵ {{ "%.2f"|format(today_revenue) }}
+            </strong>
+        </div>
+
+    </div>
+
+
+    <!-- Number of Sales -->
+    <div class="stat-card">
+
+        <div class="stat-icon orders-icon">
+            🧾
+        </div>
+
+        <div class="stat-info">
+            <span>Sales Today</span>
+            <strong>{{ today_sales_count }}</strong>
+        </div>
+
+    </div>
+
+
+    <!-- Today's Profit -->
+    <div class="stat-card">
+
+        <div class="stat-icon profit-icon">
+            📈
+        </div>
+
+        <div class="stat-info">
+            <span>Today's Profit</span>
+
+            <strong>
+                GH₵ {{ "%.2f"|format(today_profit) }}
+            </strong>
+        </div>
+
+    </div>
+
+</div>
+                <!-- =========================
+                     TODAY'S PERFORMANCE
+                ========================== -->
+
+                <div class="cards">
+
+                    <div class="card">
+                        <h3>Number of Sales Today</h3>
+                        <p>{{ today_sales_count }}</p>
+                    </div>
+
+
+                    <div class="card">
+                        <h3>Today's Profit</h3>
+                        <p>
+                            GH₵ {{ "%.2f"|format(today_profit) }}
+                        </p>
+                    </div>
+
+                </div>
+
+
+  <!-- =========================
+     LOW STOCK PRODUCTS
+========================== -->
+
+<div class="table-container dashboard-table">
+
+    <div class="table-header">
+
+        <div>
+            <h2>Low Stock Products</h2>
+
+            <p>
+                Products that need restocking
+            </p>
+        </div>
+
+        <a
+            href="{{ url_for('stock') }}"
+            class="table-action"
+        >
+            Manage Stock →
+        </a>
+
+    </div>
+
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Current Stock</th>
+                <th>Minimum Stock</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+
+        <tbody>
+
+            {% if low_stock_products %}
+
+                {% for product in low_stock_products %}
+
+                <tr>
+
+                    <td>
+                        <strong class="product-name">
+                            {{ product.name }}
+                        </strong>
+                    </td>
+
+
+                    <td>
+                        <strong>
+                            {{ product.quantity }}
+                        </strong>
+                    </td>
+
+
+                    <td>
+                        {{ product.minimum_stock }}
+                    </td>
+
+
+                    <td>
+
+                        {% if product.quantity == 0 %}
+
+                            <span class="status-badge status-out">
+                                Out of Stock
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-badge status-low">
+                                Low Stock
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            {% else %}
+
+                <tr>
+
+                    <td
+                        colspan="4"
+                        class="empty-table"
+                    >
+                        <div class="empty-state">
+
+                            <span class="empty-icon">
+                                ✓
+                            </span>
+
+                            <strong>
+                                Stock levels are good
+                            </strong>
+
+                            <p>
+                                No products currently need restocking.
+                            </p>
+
+                        </div>
+                    </td>
+
+                </tr>
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+                <!-- =========================
+                     RECENT SALES
+                ========================== -->
+
+                <div class="table-container">
+
+                    <h2>Recent Sales</h2>
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Receipt</th>
+                                <th>Total</th>
+                                <th>Date</th>
+                                <th>Sold By</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% if recent_sales %}
+
+                                {% for sale in recent_sales %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ sale.receipt_number }}
+                                    </td>
+
+                                    <td>
+                                        GH₵ {{ "%.2f"|format(sale.total_amount) }}
+                                    </td>
+
+                                    <td>
+                                        {{ sale.sale_date.strftime("%d-%m-%Y %H:%M") }}
+                                    </td>
+
+                                    <td>
+                                        {{ sale.user.username }}
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            {% else %}
+
+                                <tr>
+                                    <td colspan="4">
+                                        No sales recorded yet.
+                                    </td>
+                                </tr>
+
+                            {% endif %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- =========================
+                     TOP SELLING BOOKS
+                ========================== -->
+
+                <div class="table-container">
+
+                    <h2>Top-Selling Books</h2>
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity Sold</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% if top_selling_books %}
+
+                                {% for book in top_selling_books %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ book.name }}
+                                    </td>
+
+                                    <td>
+                                        {{ book.quantity_sold }}
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            {% else %}
+
+                                <tr>
+                                    <td colspan="2">
+                                        No sales recorded yet.
+                                    </td>
+                                </tr>
+
+                            {% endif %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
+

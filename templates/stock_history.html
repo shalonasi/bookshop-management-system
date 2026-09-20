@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Stock History - Bookshop Management System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    {% include "partials/sidebar.html" %}
+
+    <main class="main-content">
+
+        <div class="top-header">
+
+            <h1>Stock History</h1>
+
+            <div class="admin-info">
+                <span>{{ current_user.username }}</span>
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-content">
+
+            <div class="welcome">
+
+                <h2>Stock Movement History</h2>
+
+                <p>
+                    View all stock movements recorded in the bookshop.
+                </p>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Product</th>
+                            <th>Movement</th>
+                            <th>Quantity</th>
+                            <th>Reference</th>
+                            <th>Date</th>
+                            <th>Recorded By</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% if movements %}
+
+                            {% for movement in movements %}
+
+                            <tr>
+
+                                <td>
+                                    {{ movement.id }}
+                                </td>
+
+                                <td>
+                                    {{ movement.product.name }}
+                                </td>
+
+                                <td>
+
+                                    {% if movement.movement_type == "IN" %}
+
+                                        <span class="stock-good">
+                                            Stock In
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="stock-low">
+                                            Stock Out
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+                                    {{ movement.quantity }}
+                                </td>
+
+                                <td>
+                                    {{ movement.reference or "-" }}
+                                </td>
+
+                                <td>
+                                    {{ movement.movement_date.strftime("%d-%m-%Y %H:%M:%S") }}
+                                </td>
+
+                                <td>
+                                    {{ movement.user.username }}
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <tr>
+
+                                <td colspan="7">
+                                    No stock movements recorded yet.
+                                </td>
+
+                            </tr>
+
+                        {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

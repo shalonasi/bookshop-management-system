@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Sale Details - Bookshop Management System
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="app-layout">
+
+    {% include "partials/sidebar.html" %}
+
+
+    <main class="main-content">
+
+
+        <!-- TOP HEADER -->
+
+        <div class="top-header">
+
+            <div>
+
+                <h1>Sale Details</h1>
+
+                <p class="page-subtitle">
+                    Transaction information and items sold
+                </p>
+
+            </div>
+
+
+            <div class="admin-info">
+
+                <span>
+                    {{ current_user.username }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="dashboard-content">
+
+
+            <!-- =========================
+                 SALE HEADER
+            ========================== -->
+
+            <div class="sale-details-header">
+
+                <div>
+
+                    <span class="sale-status">
+                        COMPLETED
+                    </span>
+
+                    <h2>
+                        {{ sale.receipt_number }}
+                    </h2>
+
+                    <p>
+                        Sale transaction
+                    </p>
+
+                </div>
+
+
+                <div class="sale-details-actions">
+
+                    <a
+                        href="{{ url_for('sale_receipt', sale_id=sale.id) }}"
+                        target="_blank"
+                        class="receipt-btn"
+                    >
+                        View Receipt
+                    </a>
+
+
+                    <a
+                        href="{{ url_for('sales') }}"
+                        class="secondary-btn"
+                    >
+                        Back to Sales
+                    </a>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 SALE INFORMATION
+            ========================== -->
+
+            <div class="sale-info-grid">
+
+
+                <div class="sale-info-card">
+
+                    <span class="info-label">
+                        Receipt Number
+                    </span>
+
+                    <strong>
+                        {{ sale.receipt_number }}
+                    </strong>
+
+                </div>
+
+
+
+                <div class="sale-info-card">
+
+                    <span class="info-label">
+                        Date
+                    </span>
+
+                    <strong>
+                        {{ sale.sale_date.strftime("%d-%m-%Y") }}
+                    </strong>
+
+                </div>
+
+
+
+                <div class="sale-info-card">
+
+                    <span class="info-label">
+                        Time
+                    </span>
+
+                    <strong>
+                        {{ sale.sale_date.strftime("%H:%M:%S") }}
+                    </strong>
+
+                </div>
+
+
+
+                <div class="sale-info-card">
+
+                    <span class="info-label">
+                        Sold By
+                    </span>
+
+                    <strong>
+                        {{ sale.user.username }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =========================
+                 CUSTOMER
+            ========================== -->
+
+            <div class="table-container sale-customer">
+
+                <div class="section-title">
+
+                    <div>
+
+                        <h3>
+                            Customer Information
+                        </h3>
+
+                        <p>
+                            Customer or transaction reference
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="customer-reference">
+
+                    {{ sale.customer_reference or "Walk-in Customer" }}
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 PRODUCTS SOLD
+            ========================== -->
+
+            <div class="table-container">
+
+
+                <div class="section-title">
+
+                    <div>
+
+                        <h3>
+                            Products Sold
+                        </h3>
+
+                        <p>
+                            Items included in this transaction
+                        </p>
+
+                    </div>
+
+
+                    <span class="items-count">
+
+                        {{ items|length }}
+                        item{% if items|length != 1 %}s{% endif %}
+
+                    </span>
+
+                </div>
+
+
+
+                <div class="sale-table-wrapper">
+
+                    <table class="sale-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    Product
+                                </th>
+
+                                <th>
+                                    Quantity
+                                </th>
+
+                                <th>
+                                    Unit Price
+                                </th>
+
+                                <th>
+                                    Subtotal
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for item in items %}
+
+                            <tr>
+
+                                <td>
+                                    {{ loop.index }}
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        {{ item.product.name }}
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+                                    {{ item.quantity }}
+                                </td>
+
+
+                                <td>
+                                    GH₵
+                                    {{ "%.2f"|format(item.unit_price) }}
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        GH₵
+                                        {{ "%.2f"|format(item.subtotal) }}
+                                    </strong>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+
+                <!-- TOTAL -->
+
+                <div class="sale-total">
+
+                    <span>
+                        Total Amount
+                    </span>
+
+                    <strong>
+                        GH₵
+                        {{ "%.2f"|format(sale.total_amount) }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =========================
+                 FOOTER ACTIONS
+            ========================== -->
+
+            <div class="bottom-actions">
+
+                <a
+                    href="{{ url_for('sales') }}"
+                    class="secondary-btn"
+                >
+                    ← Back to Sales
+                </a>
+
+
+                <a
+                    href="{{ url_for('sale_receipt', sale_id=sale.id) }}"
+                    target="_blank"
+                    class="receipt-btn"
+                >
+                    View / Print Receipt
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>
+

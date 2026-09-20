@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Sales - Bookshop Management System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="app-layout">
+
+    {% include "partials/sidebar.html" %}
+
+
+    <main class="main-content">
+
+        <!-- =========================
+             TOP HEADER
+        ========================== -->
+
+        <div class="top-header">
+
+            <div>
+                <h1>Sales</h1>
+                <p class="page-subtitle">
+                    Manage and monitor bookshop sales.
+                </p>
+            </div>
+
+            <div class="admin-info">
+                <span>{{ current_user.username }}</span>
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-content">
+
+
+            <!-- =========================
+                 PAGE INTRO
+            ========================== -->
+
+            <div class="page-heading">
+
+                <div>
+
+                    <h2>Sales Management</h2>
+
+                    <p>
+                        View completed sales, receipts and transaction details.
+                    </p>
+
+                </div>
+
+
+                <a href="{{ url_for('new_sale') }}"
+                   class="btn primary-btn">
+
+                    + New Sale
+
+                </a>
+
+            </div>
+
+
+            <!-- =========================
+                 SALES SUMMARY
+            ========================== -->
+
+            <div class="cards sales-summary">
+
+                <div class="card">
+
+                    <h3>Total Sales</h3>
+
+                    <p>
+                        {{ sales|length }}
+                    </p>
+
+                    <span class="card-description">
+                        Recorded transactions
+                    </span>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>Total Revenue</h3>
+
+                    <p>
+
+                        GH₵
+                        {{ "%.2f"|format(
+                            sales
+                            |map(attribute="total_amount")
+                            |sum
+                        ) }}
+
+                    </p>
+
+                    <span class="card-description">
+                        Revenue from recorded sales
+                    </span>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>Latest Sale</h3>
+
+                    <p>
+
+                        {% if sales %}
+
+                            {{ sales[0].sale_date.strftime("%d-%m-%Y") }}
+
+                        {% else %}
+
+                            —
+
+                        {% endif %}
+
+                    </p>
+
+                    <span class="card-description">
+                        Most recent transaction
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 SALES TABLE
+            ========================== -->
+
+            <div class="table-container">
+
+                <div class="table-header">
+
+                    <div>
+
+                        <h2>Recent Transactions</h2>
+
+                        <p>
+                            Complete history of recorded sales.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Receipt Number</th>
+
+                                <th>Total Amount</th>
+
+                                <th>Date</th>
+
+                                <th>Sold By</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                        {% if sales %}
+
+                            {% for sale in sales %}
+
+                            <tr>
+
+
+                                <!-- RECEIPT -->
+
+                                <td>
+
+                                    <span class="receipt-number">
+                                        {{ sale.receipt_number }}
+                                    </span>
+
+                                </td>
+
+
+                                <!-- TOTAL -->
+
+                                <td>
+
+                                    <strong>
+                                        GH₵ {{ "%.2f"|format(sale.total_amount) }}
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- DATE -->
+
+                                <td>
+
+                                    <div class="date-cell">
+
+                                        <strong>
+                                            {{ sale.sale_date.strftime("%d-%m-%Y") }}
+                                        </strong>
+
+                                        <small>
+                                            {{ sale.sale_date.strftime("%H:%M") }}
+                                        </small>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- SOLD BY -->
+
+                                <td>
+
+                                    <span class="user-badge">
+
+                                        {{ sale.user.username }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+
+                                <td>
+
+                                    <div class="action-group">
+
+                                        <a
+                                            href="{{ url_for('sale_receipt', sale_id=sale.id) }}"
+                                            target="_blank"
+                                            class="action-btn receipt-btn"
+                                        >
+
+                                            Receipt
+
+                                        </a>
+
+
+                                        <a
+                                            href="{{ url_for('sale_details', sale_id=sale.id) }}"
+                                            class="action-btn details-btn"
+                                        >
+
+                                            Details
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+
+                            </tr>
+
+                            {% endfor %}
+
+
+                        {% else %}
+
+                            <tr>
+
+                                <td colspan="5">
+
+                                    <div class="empty-state">
+
+                                        <strong>
+                                            No sales recorded yet
+                                        </strong>
+
+                                        <p>
+                                            Completed sales will appear here.
+                                        </p>
+
+                                        <a
+                                            href="{{ url_for('new_sale') }}"
+                                            class="btn primary-btn"
+                                        >
+
+                                            Create First Sale
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endif %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>
+

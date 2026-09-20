@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Clear Test Data</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    {% include "partials/sidebar.html" %}
+
+    <main class="main-content">
+
+        <!-- TOP HEADER -->
+
+        <div class="top-header">
+
+            <h1>Clear Test Data</h1>
+
+            <div class="admin-info">
+                <span>{{ current_user.username }}</span>
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-content">
+
+            <div class="table-container"
+                 style="max-width: 650px; margin: 40px auto;">
+
+                <h2 style="color: #d70015;">
+                    ⚠ Clear Test Data
+                </h2>
+
+                <p>
+                    This action will permanently remove
+                    all test transaction records from the
+                    bookshop system.
+                </p>
+
+
+                <h3>
+                    The following will be deleted:
+                </h3>
+
+                <ul>
+
+                    <li>
+                        All sales
+                    </li>
+
+                    <li>
+                        All sale items
+                    </li>
+
+                    <li>
+                        All stock movement history
+                    </li>
+
+                </ul>
+
+
+                <h3>
+                    Product stock will be reset
+                </h3>
+
+                <p>
+                    All existing products will remain in the
+                    system, but their current stock quantity
+                    will be changed to <strong>0</strong>.
+                </p>
+
+
+                <h3>
+                    The following will NOT be deleted:
+                </h3>
+
+                <ul>
+
+                    <li>
+                        Products
+                    </li>
+
+                    <li>
+                        Categories
+                    </li>
+
+                    <li>
+                        Users
+                    </li>
+
+                    <li>
+                        Administrator accounts
+                    </li>
+
+                </ul>
+
+
+                <hr style="margin: 25px 0;">
+
+
+                <p>
+                    <strong>
+                        This action cannot be undone.
+                    </strong>
+                </p>
+
+
+                <form method="POST">
+
+                    <label for="confirmation">
+
+                        
+                        <strong>CONSULT BLAISE TO CONTINUE:</strong>
+                        
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="confirmation"
+                        name="confirmation"
+                        placeholder="..."
+                        autocomplete="off"
+                        required
+                        style="
+                            width: 100%;
+                            padding: 12px;
+                            margin-top: 10px;
+                            margin-bottom: 15px;
+                            box-sizing: border-box;
+                        "
+                    >
+
+
+                    <button
+                        type="submit"
+                        class="btn"
+                        style="
+                            background: #d70015;
+                            color: white;
+                            border: none;
+                            width: 100%;
+                            padding: 13px;
+                            cursor: pointer;
+                        "
+                    >
+                        Permanently Clear Test Data
+                    </button>
+
+                </form>
+
+
+                <div style="margin-top: 15px;">
+
+                    <a
+                        href="{{ url_for('reports') }}"
+                        class="btn"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

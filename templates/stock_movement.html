@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Stock Movement - Bookshop Management System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    {% include "partials/sidebar.html" %}
+
+    <main class="main-content">
+
+        <div class="top-header">
+            <h1>Stock Movement</h1>
+
+            <div class="admin-info">
+                <span>{{ current_user.username }}</span>
+            </div>
+        </div>
+
+
+        <div class="dashboard-content">
+
+            <div class="welcome">
+                <h2>Update Stock</h2>
+                <p>Record stock received or stock removed from inventory.</p>
+            </div>
+
+
+            <!-- PRODUCT INFORMATION -->
+
+            <div class="table-container">
+
+                <h3>Product Information</h3>
+
+                <table>
+
+                    <tr>
+                        <th>Product</th>
+                        <td>{{ product.name }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Category</th>
+                        <td>{{ product.category.name }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Current Stock</th>
+                        <td>{{ product.quantity }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Minimum Stock</th>
+                        <td>{{ product.minimum_stock }}</td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+
+            <!-- STOCK MOVEMENT FORM -->
+
+            <div class="table-container">
+
+                <h3>Record Stock Movement</h3>
+
+                <form method="POST">
+
+                    <div class="form-group">
+
+                        <label for="movement_type">
+                            Movement Type
+                        </label>
+
+                        <select
+                            id="movement_type"
+                            name="movement_type"
+                            required
+                        >
+
+                            <option value="">
+                                Select Movement Type
+                            </option>
+
+                            <option value="IN">
+                                Stock In
+                            </option>
+
+                            <option value="OUT">
+                                Stock Out
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="quantity">
+                            Quantity
+                        </label>
+
+                        <input
+                            type="number"
+                            id="quantity"
+                            name="quantity"
+                            min="1"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="reference">
+                            Reference
+                        </label>
+
+                        <input
+                            type="text"
+                            id="reference"
+                            name="reference"
+                            placeholder="e.g. New stock received"
+                            maxlength="150"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button type="submit" class="btn">
+                        Record Movement
+                    </button>
+
+                    <a
+                        href="{{ url_for('stock') }}"
+                        class="action-btn"
+                    >
+                        Cancel
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

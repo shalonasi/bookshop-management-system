@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Users - HORA Bookshop</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    {% include "partials/sidebar.html" %}
+
+    <main class="main-content">
+
+        <div class="top-header">
+
+            <h1>Users</h1>
+
+            <div class="admin-info">
+                <span>{{ current_user.username }}</span>
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-content">
+
+            <div class="welcome">
+
+                <h2>User Management</h2>
+
+                <p>
+                    Manage administrators and sales personnel.
+                </p>
+
+            </div>
+
+
+            <div style="margin-bottom: 20px;">
+
+                <a
+                    href="{{ url_for('add_user') }}"
+                    class="btn"
+                >
+                    + Add User
+                </a>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Username</th>
+
+                            <th>Role</th>
+
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% if users %}
+
+                            {% for user in users %}
+
+                            <tr>
+
+                                <td>
+                                    {{ user.id }}
+                                </td>
+
+                                <td>
+                                    {{ user.username }}
+                                </td>
+
+                                <td>
+
+                                    {% if user.role == "admin" %}
+                                        Administrator
+                                    {% else %}
+                                        Sales Personnel
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+
+                                    {% if user.id != current_user.id %}
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('delete_user', user_id=user.id) }}"
+                                        style="display:inline;"
+                                        onsubmit="return confirm('Are you sure you want to delete this user?');"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="btn"
+                                        >
+                                            Delete
+                                        </button>
+
+                                    </form>
+
+                                    {% else %}
+
+                                        <span>Current User</span>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <tr>
+
+                                <td colspan="4">
+                                    No users found.
+                                </td>
+
+                            </tr>
+
+                        {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

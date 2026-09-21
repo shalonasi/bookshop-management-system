@@ -98,4 +98,4 @@ The system was developed to provide a simple way of managing bookshop operations
 **Shalon Asi**
 
 Computer Science Student
-Accra Technical University
+
